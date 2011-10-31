@@ -127,11 +127,7 @@ USE_CURL=1
 endif
 
 ifndef USE_CURL_DLOPEN
-  ifeq ($(PLATFORM),mingw32)
-    USE_CURL_DLOPEN=0
-  else
-    USE_CURL_DLOPEN=1
-  endif
+USE_CURL_DLOPEN=0
 endif
 
 ifndef USE_CODEC_VORBIS
@@ -228,7 +224,7 @@ ifneq ($(BUILD_CLIENT),0)
 endif
 
 # version info
-VERSION=1.00
+VERSION=1
 
 USE_SVN=
 ifeq ($(wildcard .svn),.svn)
