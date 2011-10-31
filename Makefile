@@ -242,8 +242,13 @@ ifeq ($(wildcard .git/svn/.metadata),.git/svn/.metadata)
 endif
 endif
 
+USE_GIT=
 ifeq ($(wildcard .git),.git)
-    VERSION:=$(VERSION)_git_$(shell LANG=C git log -n1 --pretty=format:%h .)
+  GIT_COMMIT=$(shell LANG=C git log -n1 --pretty=format:%h .)
+  ifneq ($(GIT_COMMIT),)
+    VERSION:=$(VERSION)_git_$(GIT_COMMIT)
+    USE_GIT=1
+  endif
 endif
 
 #############################################################################
@@ -2272,6 +2277,11 @@ ifeq ($(USE_SVN),1)
   $(B)/ded/common.o : .svn/entries
 endif
 
+ifeq ($(USE_GIT),1)
+  $(B)/client/cl_console.o : .git/index
+  $(B)/client/common.o : .git/index
+  $(B)/ded/common.o : .git/index
+endif
 
 #############################################################################
 ## GAME MODULE RULES
