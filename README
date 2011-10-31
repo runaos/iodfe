@@ -1,1 +1,32 @@
-asd
+iodfengine is a defrag-oriented engine, a fork of ioquake3 with some dfengine features and some new things.
+
+ioq3 - http://ioquake3.org/
+dfengine - http://cggdev.org/
+
+What comes from dfengine:
+con_filter[0-9]
+/download
+/cl_mapAutoDownload
+Drakkar's fast loading code
+And some minor things.
+
+What's new:
+scr_hud_snap_draw 1 - snapping hud, shows zones of possible acceleration (for 8 ms frametime)
+scr_hud_snap_auto - auto-shifting angle of the hud for different strafe styles, scr_hud_snap_def - offset with no keys pressed or with scr_hud_snap_auto 0
+scr_hud_snap_speed - calculate zones for the stated speed instead
+
+scr_hud_pitch - angle marks, setting it to "-15 70" for example will put two marks at -15 and 70 degrees of pitch 
+
+Clock :)
+con_timestamp [0-1]
+con_timedisplay [0-3]
+
+Made toggleable:
+con_drawversion [0-1]
+con_filter [0-1]
+con_completemapnames [0-1]
+
+ctrl+enter in console sends message with /team_say
+ctrl+shift+enter sends it with /tell to df_mp_trackplayernum
+
+set in_numpadbug to 1 if numpad doesn't work in console
