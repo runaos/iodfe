@@ -246,6 +246,9 @@ ifeq ($(wildcard .git/svn/.metadata),.git/svn/.metadata)
 endif
 endif
 
+ifeq ($(wildcard .git),.git)
+    VERSION:=$(VERSION)_git_$(shell LANG=C git log -n1 --pretty=format:%h .)
+endif
 
 #############################################################################
 # SETUP AND BUILD -- LINUX
