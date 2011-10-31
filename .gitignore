@@ -3,3 +3,4 @@ Makefile.local
 *.sdf
 *.suo
 *.opensdf
+*.ipch
