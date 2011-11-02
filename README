@@ -1,7 +1,9 @@
 iodfengine is a defrag-oriented engine, a fork of ioquake3 with some dfengine features and some new things.
 
+source: https://github.com/runaos/iodfe
+
 ioq3 - http://ioquake3.org/
-dfengine - http://cggdev.org/
+dfengine - http://cggdev.org/ (source mirror: https://github.com/cliffrowley/dfengine)
 
 What comes from dfengine:
 con_filter[0-9]
