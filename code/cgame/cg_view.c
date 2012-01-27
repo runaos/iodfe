@@ -506,9 +506,7 @@ static int CG_CalcFov( void ) {
 			}
 		} else {
 			f = ( cg.time - cg.zoomTime ) / (float)ZOOM_TIME;
-			if ( f > 1.0 ) {
-				fov_x = fov_x;
-			} else {
+			if ( f <= 1.0 ) {
 				fov_x = zoomFov + f * ( fov_x - zoomFov );
 			}
 		}
@@ -557,6 +555,10 @@ static void CG_DamageBlendBlob( void ) {
 	int			t;
 	int			maxTime;
 	refEntity_t		ent;
+
+	if (!cg_blood.integer) {
+		return;
+	}
 
 	if ( !cg.damageValue ) {
 		return;
