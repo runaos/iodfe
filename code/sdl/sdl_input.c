@@ -49,6 +49,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 
 static cvar_t *in_keyboardDebug     = NULL;
+static cvar_t *in_keyboardRepeatDelay     = NULL;
+static cvar_t *in_keyboardRepeatInterval     = NULL;
 
 static SDL_Joystick *stick = NULL;
 
@@ -876,8 +878,7 @@ static void IN_ProcessEvents( void )
 	}
 	else if( !keyRepeatEnabled )
 	{
-		SDL_EnableKeyRepeat( SDL_DEFAULT_REPEAT_DELAY,
-			SDL_DEFAULT_REPEAT_INTERVAL );
+		SDL_EnableKeyRepeat( in_keyboardRepeatDelay->integer, in_keyboardRepeatInterval->integer );
 		keyRepeatEnabled = qtrue;
 	}
 
@@ -1032,6 +1033,8 @@ void IN_Init( void )
 	Com_DPrintf( "\n------- Input Initialization -------\n" );
 
 	in_keyboardDebug = Cvar_Get( "in_keyboardDebug", "0", CVAR_ARCHIVE );
+	in_keyboardRepeatDelay = Cvar_Get( "in_keyboardRepeatDelay", "500", CVAR_ARCHIVE );
+	in_keyboardRepeatInterval = Cvar_Get( "in_keyboardRepeatInterval", "30", CVAR_ARCHIVE );
 
 	// mouse variables
 	in_mouse = Cvar_Get( "in_mouse", "1", CVAR_ARCHIVE );
@@ -1046,7 +1049,7 @@ void IN_Init( void )
 #endif
 
 	SDL_EnableUNICODE( 1 );
-	SDL_EnableKeyRepeat( SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL );
+	SDL_EnableKeyRepeat( in_keyboardRepeatDelay->integer, in_keyboardRepeatInterval->integer );
 	keyRepeatEnabled = qtrue;
 
 	mouseAvailable = ( in_mouse->value != 0 );
