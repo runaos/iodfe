@@ -68,6 +68,7 @@ cvar_t		*con_notifytime;
 cvar_t		*con_notifylines;
 cvar_t		*con_notifyx;
 cvar_t		*con_notifyy;
+cvar_t		*con_notifykeep;
 // Cgg
 cvar_t		*con_useshader;
 cvar_t		*con_opacity;
@@ -270,7 +271,7 @@ Con_ClearNotify
 */
 void Con_ClearNotify( void ) {
 	int		i;
-	
+	if (con_notifykeep->integer) return;
 	for ( i = 0 ; i < NUM_CON_TIMES ; i++ ) {
 		con.times[i] = 0;
 	}
@@ -369,6 +370,7 @@ void Con_Init (void) {
 	con_notifylines = Cvar_Get ("con_notifylines", "3", CVAR_ARCHIVE);
 	con_notifyx = Cvar_Get ("con_notifyx", "73", CVAR_ARCHIVE);
 	con_notifyy = Cvar_Get ("con_notifyy", "0", CVAR_ARCHIVE);
+	con_notifykeep = Cvar_Get ("con_notifykeep", "0", CVAR_ARCHIVE);
 	con_conspeed = Cvar_Get ("scr_conspeed", "3", CVAR_ARCHIVE);
 	con_timestamp = Cvar_Get ("con_timestamp", "1", CVAR_ARCHIVE);
 	con_timedisplay = Cvar_Get ("con_timedisplay", "3", CVAR_ARCHIVE);
