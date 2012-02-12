@@ -712,16 +712,16 @@ void Con_DrawNotify (void)
 	{
 		if (chat_team)
 		{
-			SCR_DrawSmallStringExt(8, v, "say_team:", colorWhite, qfalse, qfalse);
+			SCR_DrawSmallStringExt(8, v+con_notifyy->integer, "say_team:", colorWhite, qfalse, qfalse);
 			skip = 11;
 		}
 		else
 		{
-			SCR_DrawSmallStringExt(8, v, "say:", colorWhite, qfalse, qfalse);
+			SCR_DrawSmallStringExt(8, v+con_notifyy->integer, "say:", colorWhite, qfalse, qfalse);
 			skip = 6;
 		}
 
-		Field_Draw(&chatField,  skip * TINYCHAR_WIDTH, v,
+		Field_Draw(&chatField,  skip * TINYCHAR_WIDTH, v+con_notifyy->integer,
 			SCREEN_WIDTH - ( skip + 1 ) * TINYCHAR_WIDTH, qtrue, qtrue);
 
 		v += BIGCHAR_HEIGHT;
