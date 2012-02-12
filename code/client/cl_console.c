@@ -704,24 +704,17 @@ void Con_DrawNotify (void)
 	{
 		if (chat_team)
 		{
-			// Cgg
 			SCR_DrawSmallStringExt(8, v, "say_team:", colorWhite, qfalse, qfalse);
-			//SCR_DrawBigString (8, v, "say_team:", 1.0f );
-			// !Cgg
 			skip = 11;
 		}
 		else
 		{
-			// Cgg
 			SCR_DrawSmallStringExt(8, v, "say:", colorWhite, qfalse, qfalse);
 			skip = 6;
-			//skip = 5;
-			//SCR_DrawBigString (8, v, "say:", 1.0f );
-			// !Cgg
 		}
 
-		Field_BigDraw( &chatField, skip * BIGCHAR_WIDTH, v,
-			SCREEN_WIDTH - ( skip + 1 ) * BIGCHAR_WIDTH, qtrue, qtrue );
+		Field_Draw(&chatField,  skip * TINYCHAR_WIDTH, v,
+			SCREEN_WIDTH - ( skip + 1 ) * TINYCHAR_WIDTH, qtrue, qtrue);
 
 		v += BIGCHAR_HEIGHT;
 	}
