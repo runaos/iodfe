@@ -31,7 +31,7 @@ int g_console_field_width = 78;
 
 #define	NUM_CON_TIMES 4
 
-#define		CON_TEXTSIZE	0x10000
+#define		CON_TEXTSIZE	0x30000
 typedef struct {
 	qboolean	initialized;
 
