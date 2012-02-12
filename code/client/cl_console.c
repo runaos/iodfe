@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 int g_console_field_width = 78;
 
 
-#define	NUM_CON_TIMES 4
+#define	NUM_CON_TIMES 64
 
 #define		CON_TEXTSIZE	0x10000
 typedef struct {
@@ -65,6 +65,7 @@ cvar_t		*con_drawversion;
 
 cvar_t		*con_conspeed;
 cvar_t		*con_notifytime;
+cvar_t		*con_notifylines;
 // Cgg
 cvar_t		*con_useshader;
 cvar_t		*con_opacity;
@@ -363,6 +364,7 @@ void Con_Init (void) {
 	int erroffset;
 
 	con_notifytime = Cvar_Get ("con_notifytime", "3", CVAR_ARCHIVE);
+	con_notifylines = Cvar_Get ("con_notifylines", "3", CVAR_ARCHIVE);
 	con_conspeed = Cvar_Get ("scr_conspeed", "3", CVAR_ARCHIVE);
 	con_timestamp = Cvar_Get ("con_timestamp", "1", CVAR_ARCHIVE);
 	con_timedisplay = Cvar_Get ("con_timedisplay", "3", CVAR_ARCHIVE);
@@ -663,7 +665,7 @@ void Con_DrawNotify (void)
 	re.SetColor( g_color_table[currentColor] );
 
 	v = 0;
-	for (i= con.current-NUM_CON_TIMES+1 ; i<=con.current ; i++)
+	for (i= con.current-con_notifylines->integer ; i<=con.current ; i++)
 	{
 		if (i < 0)
 			continue;
