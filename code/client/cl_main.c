@@ -108,7 +108,6 @@ cvar_t	*cl_motdString;
 cvar_t	*cl_allowDownload;
 cvar_t	*cl_mapAutoDownload; // drakkar
 
-cvar_t	*cl_conXOffset;
 cvar_t	*cl_inGameVideo;
 
 cvar_t	*cl_serverStatusResendTime;
@@ -3519,7 +3518,6 @@ void CL_Init( void ) {
 	cl_cURLLib = Cvar_Get("cl_cURLLib", DEFAULT_CURL_LIB, CVAR_ARCHIVE);
 #endif
 
-	cl_conXOffset = Cvar_Get ("cl_conXOffset", "0", 0);
 #ifdef MACOS_X
 	// In game video is REALLY slow in Mac OS X right now due to driver slowness
 	cl_inGameVideo = Cvar_Get ("r_inGameVideo", "0", CVAR_ARCHIVE);

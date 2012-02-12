@@ -66,6 +66,8 @@ cvar_t		*con_drawversion;
 cvar_t		*con_conspeed;
 cvar_t		*con_notifytime;
 cvar_t		*con_notifylines;
+cvar_t		*con_notifyx;
+cvar_t		*con_notifyy;
 // Cgg
 cvar_t		*con_useshader;
 cvar_t		*con_opacity;
@@ -365,6 +367,8 @@ void Con_Init (void) {
 
 	con_notifytime = Cvar_Get ("con_notifytime", "3", CVAR_ARCHIVE);
 	con_notifylines = Cvar_Get ("con_notifylines", "3", CVAR_ARCHIVE);
+	con_notifyx = Cvar_Get ("con_notifyx", "73", CVAR_ARCHIVE);
+	con_notifyy = Cvar_Get ("con_notifyy", "0", CVAR_ARCHIVE);
 	con_conspeed = Cvar_Get ("scr_conspeed", "3", CVAR_ARCHIVE);
 	con_timestamp = Cvar_Get ("con_timestamp", "1", CVAR_ARCHIVE);
 	con_timedisplay = Cvar_Get ("con_timedisplay", "3", CVAR_ARCHIVE);
@@ -689,7 +693,7 @@ void Con_DrawNotify (void)
 				currentColor = ((text[x]>>8)&15)%10;
 				re.SetColor( g_color_table[currentColor] );
 			}
-			SCR_DrawSmallChar( cl_conXOffset->integer + con.xadjust + (x+1-(con_timestamp->integer ? 9 : 0))*SMALLCHAR_WIDTH, v, text[x] & 0xff );
+			SCR_DrawSmallChar( con_notifyx->integer + con.xadjust + (x+1-(con_timestamp->integer ? 9 : 0))*SMALLCHAR_WIDTH, v+con_notifyy->integer, text[x] & 0xff );
 		}
 
 		v += SMALLCHAR_HEIGHT;
