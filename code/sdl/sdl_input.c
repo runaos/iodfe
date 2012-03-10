@@ -26,6 +26,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #	include <SDL.h>
 #endif
 
+#ifdef _WIN32 //raw input mouse
+#ifdef USE_LOCAL_HEADERS
+#	include "SDL_syswm.h"
+#else
+#	include <SDL_syswm.h>
+#endif
+#endif
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -72,6 +80,112 @@ static cvar_t *in_joystickUseAnalog = NULL;
 static int vidRestartTime = 0;
 
 #define CTRL(a) ((a)-'a'+1)
+
+
+#ifdef _WIN32 //raw input mouse
+
+static WNDPROC SDLWindowProc = NULL;
+static qboolean mouseRaw;
+
+/*
+Doing that because I couldn't get to RAWINPUT through SDL_SYSWMEVENT //run
+http://lists.libsdl.org/pipermail/sdl-libsdl.org/2005-February/048704.html
+*/
+
+static LONG WINAPI RawWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+	case WM_INPUT:
+		if (mouseRaw)
+		{
+			RAWINPUT ri;
+			unsigned int i = sizeof(ri);
+			GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &ri, &i, sizeof(RAWINPUTHEADER));
+			if (mouseActive) {
+				for (i=0; i<5; i++) {
+					if (ri.data.mouse.ulButtons & (1<<(i*2))) {
+						Com_QueueEvent(0, SE_KEY, K_MOUSE1+i, qtrue, 0, NULL);
+					} else if (ri.data.mouse.ulButtons & (1<<(i*2+1))) {
+						Com_QueueEvent(0, SE_KEY, K_MOUSE1+i, qfalse, 0, NULL);
+					}
+				}
+				if (ri.data.mouse.lLastX || ri.data.mouse.lLastY) {
+					Com_QueueEvent(0, SE_MOUSE, ri.data.mouse.lLastX, ri.data.mouse.lLastY, 0, NULL);
+				}
+			}
+			if (ri.data.mouse.usButtonFlags & RI_MOUSE_WHEEL) {
+				for (i=0; i<abs((signed short)ri.data.mouse.usButtonData)/WHEEL_DELTA; i++) {
+					Com_QueueEvent( 0, SE_KEY, (signed short)ri.data.mouse.usButtonData < 0 ? K_MWHEELDOWN : K_MWHEELUP, qtrue, 0, NULL );
+					Com_QueueEvent( 0, SE_KEY, (signed short)ri.data.mouse.usButtonData < 0 ? K_MWHEELDOWN : K_MWHEELUP, qfalse, 0, NULL );
+				}
+			}
+		}
+		break;
+	default:
+		break;
+	}
+	return CallWindowProc(SDLWindowProc, hWnd, uMsg, wParam, lParam );
+}
+
+/*
+============================================================
+
+RAW INPUT MOUSE
+(Cgg)
+
+============================================================
+*/
+
+qboolean IN_InitRawMouse( void ) {
+	// http://www.usb.org/developers/devclass_docs/Hut1_12.pdf
+	if(!SDLWindowProc){
+		SDL_SysWMinfo wmInfo;
+		SDL_VERSION(&wmInfo.version);
+		SDL_GetWMInfo(&wmInfo);
+		SDLWindowProc = (WNDPROC)GetWindowLongPtr(wmInfo.window, GWLP_WNDPROC); 
+		SetWindowLongPtr(wmInfo.window, GWLP_WNDPROC, (LONG_PTR)RawWndProc);
+	}
+
+	RAWINPUTDEVICE dev = {
+		1,	// usUsagePage - generic desktop controls
+		2,	// usUsage - mouse
+		0,	// dwFlags
+		0	// hwndTarget
+	};
+	if (!RegisterRawInputDevices(&dev, 1, sizeof(dev))) {
+		Com_Printf("Raw input registration failed. (0x%lx)\n", GetLastError());
+		return qfalse;
+	}
+	Com_DPrintf("Registered for raw input.\n");
+	mouseRaw = qtrue;
+	return qtrue;
+}
+
+qboolean IN_ShutdownRawMouse( void ) {
+	RAWINPUTDEVICE dev = {
+		1,	// usUsagePage - generic desktop controls
+		2,	// usUsage - mouse
+		RIDEV_REMOVE,	// dwFlags
+		NULL	// hwndTarget
+	};
+	if (!RegisterRawInputDevices(&dev, 1, sizeof(dev))) {
+		Com_Printf("Mouse release failed. (0x%lx)\n", GetLastError());
+		return qfalse;
+	}
+	mouseRaw = qfalse;
+	Com_DPrintf("Released raw input mouse.\n");
+	if(SDLWindowProc){
+		SDL_SysWMinfo wmInfo;
+		SDL_VERSION(&wmInfo.version);
+		SDL_GetWMInfo(&wmInfo);
+		SetWindowLongPtr(wmInfo.window, GWLP_WNDPROC, (LONG_PTR)SDLWindowProc);
+		SDLWindowProc = NULL;
+	}
+	return qtrue;
+}
+
+#endif
 
 /*
 ===============
@@ -947,6 +1061,12 @@ static void IN_ProcessEvents( void )
 			case SDL_ACTIVEEVENT:
 				if (e.active.state & SDL_APPINPUTFOCUS) {
 					Cvar_SetValue( "com_unfocused",	!e.active.gain);
+#ifdef _WIN32
+					if (e.active.gain && in_mouse->integer == 3) {	//raw input stops working on winxp after losing focus. (why?)
+						IN_ShutdownRawMouse();
+						IN_InitRawMouse();
+					}
+#endif
 				}
 				if (e.active.state & SDL_APPACTIVE) {
 					Cvar_SetValue( "com_minimized", !e.active.gain);
@@ -1049,6 +1169,20 @@ void IN_Init( void )
 	SDL_EnableKeyRepeat( SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL );
 	keyRepeatEnabled = qtrue;
 
+#ifdef _WIN32
+	if (mouseRaw) IN_ShutdownRawMouse();
+	if (in_mouse->integer == 3 && IN_InitRawMouse())
+	{
+		SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
+		SDL_EventState(SDL_MOUSEBUTTONDOWN, SDL_IGNORE);
+		SDL_EventState(SDL_MOUSEBUTTONUP, SDL_IGNORE);
+	} else {
+		SDL_EventState(SDL_MOUSEMOTION, SDL_ENABLE);
+		SDL_EventState(SDL_MOUSEBUTTONDOWN, SDL_ENABLE);
+		SDL_EventState(SDL_MOUSEBUTTONUP, SDL_ENABLE);
+	}
+#endif
+
 	mouseAvailable = ( in_mouse->value != 0 );
 	IN_DeactivateMouse( );
 
@@ -1069,6 +1203,9 @@ IN_Shutdown
 */
 void IN_Shutdown( void )
 {
+#ifdef _WIN32
+	IN_ShutdownRawMouse( );
+#endif
 	IN_DeactivateMouse( );
 	mouseAvailable = qfalse;
 
