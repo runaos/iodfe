@@ -684,6 +684,9 @@
     <ClCompile Include="..\..\code\client\cl_download.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\client\cl_hud.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\code\game\bg_public.h">
