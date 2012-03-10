@@ -21,20 +21,20 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "client.h"
 
-cvar_t		*scr_hud_snap_draw;
-cvar_t		*scr_hud_snap_rgba1;
-cvar_t		*scr_hud_snap_rgba2;
-cvar_t		*scr_hud_snap_y;
-cvar_t		*scr_hud_snap_h;
-cvar_t		*scr_hud_snap_auto;
-cvar_t		*scr_hud_snap_def;
-cvar_t		*scr_hud_snap_speed;
+cvar_t		*iodfe_hud_snap_draw;
+cvar_t		*iodfe_hud_snap_rgba1;
+cvar_t		*iodfe_hud_snap_rgba2;
+cvar_t		*iodfe_hud_snap_y;
+cvar_t		*iodfe_hud_snap_h;
+cvar_t		*iodfe_hud_snap_auto;
+cvar_t		*iodfe_hud_snap_def;
+cvar_t		*iodfe_hud_snap_speed;
 
-cvar_t		*scr_hud_pitch;
-cvar_t		*scr_hud_pitch_rgba;
-cvar_t		*scr_hud_pitch_thickness;
-cvar_t		*scr_hud_pitch_width;
-cvar_t		*scr_hud_pitch_x;
+cvar_t		*iodfe_hud_pitch;
+cvar_t		*iodfe_hud_pitch_rgba;
+cvar_t		*iodfe_hud_pitch_thickness;
+cvar_t		*iodfe_hud_pitch_width;
+cvar_t		*iodfe_hud_pitch_x;
 
 //=============================================================================
 
@@ -81,44 +81,44 @@ void HUD_DrawSnapping ( float yaw ) {
 		cl.snappinghud.m[1]=(cl.snap.ps.stats[13] & 8) - (cl.snap.ps.stats[13] & 16);
 	}
 
-	if (!scr_hud_snap_draw->integer) {
+	if (!iodfe_hud_snap_draw->integer) {
 		return;
 	}
 	
-	speed = scr_hud_snap_speed->integer ? scr_hud_snap_speed->integer : cl.snap.ps.speed;
+	speed = iodfe_hud_snap_speed->integer ? iodfe_hud_snap_speed->integer : cl.snap.ps.speed;
 	if (speed!=cl.snappinghud.speed)
 		HUD_UpdateSnappingSettings(speed);
 	
-	y = scr_hud_snap_y->value;
-	h = scr_hud_snap_h->value;
+	y = iodfe_hud_snap_y->value;
+	h = iodfe_hud_snap_h->value;
 
-	switch (scr_hud_snap_auto->integer) {
+	switch (iodfe_hud_snap_auto->integer) {
 	case 0:
-		yaw+=scr_hud_snap_def->value;
+		yaw+=iodfe_hud_snap_def->value;
 		break;
 	case 1:
 		if (cl.snappinghud.promode || (cl.snappinghud.m[0]!=0 && cl.snappinghud.m[1]!=0)){
 			yaw+=45;
 		} else if (cl.snappinghud.m[0]==0 && cl.snappinghud.m[1]==0){
-			yaw+=scr_hud_snap_def->value;
+			yaw+=iodfe_hud_snap_def->value;
 		}
 		break;
 	case 2:
 		if (cl.snappinghud.m[0]!=0 && cl.snappinghud.m[1]!=0){
 			yaw+=45;
 		} else if (cl.snappinghud.m[0]==0 && cl.snappinghud.m[1]==0){
-			yaw+=scr_hud_snap_def->value;
+			yaw+=iodfe_hud_snap_def->value;
 		}
 		break;
 	}
 
-	t = scr_hud_snap_rgba2->string;
+	t = iodfe_hud_snap_rgba2->string;
 		color[1][0] = atof(COM_Parse(&t));
 		color[1][1] = atof(COM_Parse(&t));
 		color[1][2] = atof(COM_Parse(&t));
 		color[1][3] = atof(COM_Parse(&t));
 
-	t = scr_hud_snap_rgba1->string;
+	t = iodfe_hud_snap_rgba1->string;
 		color[0][0] = atof(COM_Parse(&t));
 		color[0][1] = atof(COM_Parse(&t));
 		color[0][2] = atof(COM_Parse(&t));
@@ -141,16 +141,16 @@ void HUD_DrawPitch ( float pitch ) {
 	vec4_t	color[3];
 	float mark;
 
-	t = scr_hud_pitch_rgba->string;
+	t = iodfe_hud_pitch_rgba->string;
 	color[2][0] = atof(COM_Parse(&t));
 	color[2][1] = atof(COM_Parse(&t));
 	color[2][2] = atof(COM_Parse(&t));
 	color[2][3] = atof(COM_Parse(&t));
 
-	t = scr_hud_pitch->string;
+	t = iodfe_hud_pitch->string;
 	mark = atof(COM_Parse(&t));
 	while (mark){
-		SCR_MarkAnglePitch( mark, scr_hud_pitch_thickness->value, pitch, scr_hud_pitch_x->value, scr_hud_pitch_width->value, color[2] );
+		SCR_MarkAnglePitch( mark, iodfe_hud_pitch_thickness->value, pitch, iodfe_hud_pitch_x->value, iodfe_hud_pitch_width->value, color[2] );
 	mark = atof(COM_Parse(&t));
 	}
 }
@@ -177,7 +177,7 @@ void HUD_Draw (void) {
 		return;
 	}
 
-	if (scr_hud_snap_draw->integer) {
+	if (iodfe_hud_snap_draw->integer) {
 		HUD_DrawSnapping ( va[YAW] );
 	}
 
@@ -190,17 +190,17 @@ HUD_Init
 ==================
 */
 void HUD_Init( void ) {
-	scr_hud_snap_draw = Cvar_Get ("scr_hud_snap_draw", "0", CVAR_ARCHIVE);
-	scr_hud_snap_rgba1 = Cvar_Get ("scr_hud_snap_rgba1", ".02 .1 .02 .4", CVAR_ARCHIVE);
-	scr_hud_snap_rgba2 = Cvar_Get ("scr_hud_snap_rgba2", ".05 .05 .05 .1", CVAR_ARCHIVE);
-	scr_hud_snap_y = Cvar_Get ("scr_hud_snap_y", "248", CVAR_ARCHIVE);
-	scr_hud_snap_h = Cvar_Get ("scr_hud_snap_h", "8", CVAR_ARCHIVE);
-	scr_hud_snap_auto = Cvar_Get ("scr_hud_snap_auto", "1", CVAR_ARCHIVE);
-	scr_hud_snap_def = Cvar_Get ("scr_hud_snap_def", "45", CVAR_ARCHIVE);
-	scr_hud_snap_speed = Cvar_Get ("scr_hud_snap_speed", "0", CVAR_ARCHIVE);
-	scr_hud_pitch = Cvar_Get ("scr_hud_pitch", "", CVAR_ARCHIVE);
-	scr_hud_pitch_thickness = Cvar_Get ("scr_hud_pitch_thickness", "2", CVAR_ARCHIVE);
-	scr_hud_pitch_x = Cvar_Get ("scr_hud_pitch_x", "320", CVAR_ARCHIVE);
-	scr_hud_pitch_width = Cvar_Get ("scr_hud_pitch_width", "10", CVAR_ARCHIVE);
-	scr_hud_pitch_rgba = Cvar_Get ("scr_hud_pitch_rgba", ".8 .8 .8 .8", CVAR_ARCHIVE);
+	iodfe_hud_snap_draw = Cvar_Get ("iodfe_hud_snap_draw", "0", CVAR_ARCHIVE);
+	iodfe_hud_snap_rgba1 = Cvar_Get ("iodfe_hud_snap_rgba1", ".02 .1 .02 .4", CVAR_ARCHIVE);
+	iodfe_hud_snap_rgba2 = Cvar_Get ("iodfe_hud_snap_rgba2", ".05 .05 .05 .1", CVAR_ARCHIVE);
+	iodfe_hud_snap_y = Cvar_Get ("iodfe_hud_snap_y", "248", CVAR_ARCHIVE);
+	iodfe_hud_snap_h = Cvar_Get ("iodfe_hud_snap_h", "8", CVAR_ARCHIVE);
+	iodfe_hud_snap_auto = Cvar_Get ("iodfe_hud_snap_auto", "1", CVAR_ARCHIVE);
+	iodfe_hud_snap_def = Cvar_Get ("iodfe_hud_snap_def", "45", CVAR_ARCHIVE);
+	iodfe_hud_snap_speed = Cvar_Get ("iodfe_hud_snap_speed", "0", CVAR_ARCHIVE);
+	iodfe_hud_pitch = Cvar_Get ("iodfe_hud_pitch", "", CVAR_ARCHIVE);
+	iodfe_hud_pitch_thickness = Cvar_Get ("iodfe_hud_pitch_thickness", "2", CVAR_ARCHIVE);
+	iodfe_hud_pitch_x = Cvar_Get ("iodfe_hud_pitch_x", "320", CVAR_ARCHIVE);
+	iodfe_hud_pitch_width = Cvar_Get ("iodfe_hud_pitch_width", "10", CVAR_ARCHIVE);
+	iodfe_hud_pitch_rgba = Cvar_Get ("iodfe_hud_pitch_rgba", ".8 .8 .8 .8", CVAR_ARCHIVE);
 }
