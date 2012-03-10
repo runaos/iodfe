@@ -206,7 +206,7 @@ static size_t Curl_HeaderCallback_f(void *ptr, size_t size, size_t nmemb, void *
 	return size*nmemb;
 }
 
-static size_t Curl_VerboseCallback_f(CURL *curl, curl_infotype type, char *data, size_t size, void *userptr) {
+static int Curl_VerboseCallback_f(CURL *curl, curl_infotype type, char *data, size_t size, void *userptr) {
 	char buf[1024];
 	char *c, *l;
 
@@ -481,7 +481,7 @@ void DL_End( CURLcode res, CURLMcode resm )
 	if( curlm )
 	{	
 		// res = final download result
-		while( msg = curl_multi_info_read( curlm, &msgs ) )
+		while( ( msg = curl_multi_info_read( curlm, &msgs ) ) )
 		{
 			if( msg->msg != CURLMSG_DONE )
 			{
@@ -679,7 +679,7 @@ void DL_Info( qboolean console )
 				Com_Printf(" (%2.1f%%)", 100.0*dlnow/dltotal);
 				if( time > 0.0 && dlnow > 0.0 ) {
 					timeleft = (int) ( (dltotal-dlnow) * time/dlnow );
-					Com_Printf(" time left: %d:%0.2d", timeleft/60, timeleft%60);
+					Com_Printf(" time left: %d:%.2d", timeleft/60, timeleft%60);
 				}
 			}
 
