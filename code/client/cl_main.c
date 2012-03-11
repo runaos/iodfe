@@ -1089,6 +1089,7 @@ void CL_PlayDemo_f( void ) {
 
 	// open the demo file
 	arg = Cmd_Argv(1);
+	Cvar_Set( "cl_downloadDemo", arg );
 	
 	CL_Disconnect( qtrue );
 

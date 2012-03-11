@@ -384,6 +384,8 @@ int DL_Begin( const char *map, qboolean nonblocking )
 	CURLMcode resm;
 	char *c;
 
+	if (!clc.demoplaying) Cvar_Set( "cl_downloadDemo", "" );
+
 	if( DL_Active() ) {
 		Com_Printf("Already downloading map '%s'.\n", Cvar_VariableString("cl_downloadName") );
 		return -1;
@@ -560,8 +562,10 @@ void DL_End( CURLcode res, CURLMcode resm )
 	}
 	else
 	{
+		if (strlen(Cvar_VariableString("cl_downloadDemo"))) {
+			Cbuf_AddText( va("demo %s\n", Cvar_VariableString("cl_downloadDemo") ) );
 		// download completed, request new gamestate to check possible new map if we are not already in game
-		if( clc.state == CA_CONNECTED )
+		} else if( clc.state == CA_CONNECTED)
 			CL_AddReliableCommand( "donedl", qfalse); // get new gamestate info from server
 	}
 }
@@ -621,7 +625,7 @@ void DL_Info( qboolean console )
 	CURLcode res;
 
 	if( !DL_Active() ) return;
-	if( clc.state != CA_CONNECTED && !console ) return;
+	if( clc.state != CA_CONNECTED && !console) return;
 
 	res = curl_easy_getinfo( curl, CURLINFO_TOTAL_TIME, &time );					// total downloading time
 	if( res != CURLE_OK ) time = -1.0;
