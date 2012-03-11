@@ -1,0 +1,48 @@
+====================================
+1st post:
+
+con_filter[0-9]
+/download
+/cl_mapAutoDownload
+Drakkar's fast loading code
+con_height
+con_rgb
+con_opacity
+con_useshader
+
+iodfe_hud_snap_draw 1
+	_snap_auto
+	_snap_def
+	_snap_speed
+	_snap_rgba1
+	_snap_rgba2
+	_snap_y
+	_snap_h
+
+iodfe_hud_pitch
+	_pitch_rgba
+	_pitch_thickness
+	_pitch_width
+	_pitch_x
+
+con_timestamp [0-1]
+con_timedisplay [0-3]
+
+con_drawversion [0-1]
+con_filter [0-1]
+con_completemapnames [0-1]
+
+ctrl+enter in console sends message with /team_say
+ctrl+shift+enter sends it with /tell to df_mp_trackplayernum
+
+in_numpadbug
+
+====================================
+2nd post:
+
++ in_mouse 3 (raw input for windows)
++ r_xpos, r_ypos
+changed vars prefix from scr_hud to iodfe_hud
++ in_keyboardRepeatDelay, in_keyboardRepeatInterval
++ added some widescreen modes to /modelist
++ con_notifylines, con_notifykeep, con_notifyx, con_notifyy
