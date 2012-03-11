@@ -75,6 +75,8 @@ cvar_t *r_allowSoftwareGL; // Don't abort out if a hardware visual can't be obta
 cvar_t *r_allowResize; // make window resizable
 cvar_t *r_centerWindow;
 cvar_t *r_sdlDriver;
+cvar_t *r_xpos;
+cvar_t *r_ypos;
 
 void (APIENTRYP qglActiveTextureARB) (GLenum texture);
 void (APIENTRYP qglClientActiveTextureARB) (GLenum texture);
@@ -685,6 +687,8 @@ void GLimp_Init( void )
 	r_sdlDriver = ri.Cvar_Get( "r_sdlDriver", "", CVAR_ROM );
 	r_allowResize = ri.Cvar_Get( "r_allowResize", "0", CVAR_ARCHIVE );
 	r_centerWindow = ri.Cvar_Get( "r_centerWindow", "0", CVAR_ARCHIVE );
+	r_xpos = ri.Cvar_Get( "r_xpos", "100", CVAR_ARCHIVE );
+	r_ypos = ri.Cvar_Get( "r_ypos", "100", CVAR_ARCHIVE );
 
 	if( ri.Cvar_VariableIntegerValue( "com_abnormalExit" ) )
 	{
@@ -692,9 +696,12 @@ void GLimp_Init( void )
 		ri.Cvar_Set( "r_fullscreen", "0" );
 		ri.Cvar_Set( "r_centerWindow", "0" );
 		ri.Cvar_Set( "com_abnormalExit", "0" );
+		ri.Cvar_Set( "r_xpos", "100" );
+		ri.Cvar_Set( "r_ypos", "100" );
 	}
 
 	ri.Sys_SetEnv( "SDL_VIDEO_CENTERED", r_centerWindow->integer ? "1" : "" );
+	ri.Sys_SetEnv( "SDL_VIDEO_WINDOW_POS", va("%d,%d",r_xpos->integer,r_ypos->integer));
 
 	ri.Sys_GLimpInit( );
 
