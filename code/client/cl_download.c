@@ -206,7 +206,7 @@ static size_t Curl_HeaderCallback_f(void *ptr, size_t size, size_t nmemb, void *
 	return size*nmemb;
 }
 
-static size_t Curl_VerboseCallback_f(CURL *curl, curl_infotype type, char *data, size_t size, void *userptr) {
+static int Curl_VerboseCallback_f(CURL *curl, curl_infotype type, char *data, size_t size, void *userptr) {
 	char buf[1024];
 	char *c, *l;
 
@@ -384,6 +384,8 @@ int DL_Begin( const char *map, qboolean nonblocking )
 	CURLMcode resm;
 	char *c;
 
+	if (!clc.demoplaying) Cvar_Set( "cl_downloadDemo", "" );
+
 	if( DL_Active() ) {
 		Com_Printf("Already downloading map '%s'.\n", Cvar_VariableString("cl_downloadName") );
 		return -1;
@@ -481,7 +483,7 @@ void DL_End( CURLcode res, CURLMcode resm )
 	if( curlm )
 	{	
 		// res = final download result
-		while( msg = curl_multi_info_read( curlm, &msgs ) )
+		while( ( msg = curl_multi_info_read( curlm, &msgs ) ) )
 		{
 			if( msg->msg != CURLMSG_DONE )
 			{
@@ -560,8 +562,10 @@ void DL_End( CURLcode res, CURLMcode resm )
 	}
 	else
 	{
+		if (strlen(Cvar_VariableString("cl_downloadDemo"))) {
+			Cbuf_AddText( va("demo %s\n", Cvar_VariableString("cl_downloadDemo") ) );
 		// download completed, request new gamestate to check possible new map if we are not already in game
-		if( clc.state == CA_CONNECTED )
+		} else if( clc.state == CA_CONNECTED)
 			CL_AddReliableCommand( "donedl", qfalse); // get new gamestate info from server
 	}
 }
@@ -621,7 +625,7 @@ void DL_Info( qboolean console )
 	CURLcode res;
 
 	if( !DL_Active() ) return;
-	if( clc.state != CA_CONNECTED && !console ) return;
+	if( clc.state != CA_CONNECTED && !console) return;
 
 	res = curl_easy_getinfo( curl, CURLINFO_TOTAL_TIME, &time );					// total downloading time
 	if( res != CURLE_OK ) time = -1.0;
@@ -679,7 +683,7 @@ void DL_Info( qboolean console )
 				Com_Printf(" (%2.1f%%)", 100.0*dlnow/dltotal);
 				if( time > 0.0 && dlnow > 0.0 ) {
 					timeleft = (int) ( (dltotal-dlnow) * time/dlnow );
-					Com_Printf(" time left: %d:%0.2d", timeleft/60, timeleft%60);
+					Com_Printf(" time left: %d:%.2d", timeleft/60, timeleft%60);
 				}
 			}
 
