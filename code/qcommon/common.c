@@ -2688,6 +2688,9 @@ void Com_Init( char *commandLine ) {
 	if(!com_basegame->string[0])
 		Cvar_ForceReset("com_basegame");
 
+#ifdef _WIN32
+	_setmaxstdio(2048);
+#endif
 	FS_InitFilesystem ();
 
 	Com_InitJournaling();
