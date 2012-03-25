@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "server.h"
 
-
+cvar_t	*sv_noReferencedPaks;
 /*
 ===============
 SV_SendConfigstring
@@ -589,12 +589,17 @@ void SV_SpawnServer( char *server, qboolean killBots ) {
 		Cvar_Set( "sv_paks", "" );
 		Cvar_Set( "sv_pakNames", "" );
 	}
-	// the server sends these to the clients so they can figure
-	// out which pk3s should be auto-downloaded
-	p = FS_ReferencedPakChecksums();
-	Cvar_Set( "sv_referencedPaks", p );
-	p = FS_ReferencedPakNames();
-	Cvar_Set( "sv_referencedPakNames", p );
+	if (sv_noReferencedPaks->integer) {
+		Cvar_Set( "sv_referencedPaks", "" );
+		Cvar_Set( "sv_referencedPakNames", "" );
+	} else {
+		// the server sends these to the clients so they can figure
+		// out which pk3s should be auto-downloaded
+		p = FS_ReferencedPakChecksums();
+		Cvar_Set( "sv_referencedPaks", p );
+		p = FS_ReferencedPakNames();
+		Cvar_Set( "sv_referencedPakNames", p );
+	}
 
 	// save systeminfo and serverinfo strings
 	Q_strncpyz( systemInfo, Cvar_InfoString_Big( CVAR_SYSTEMINFO ), sizeof( systemInfo ) );
@@ -687,6 +692,7 @@ void SV_Init (void)
 	sv_strictAuth = Cvar_Get ("sv_strictAuth", "1", CVAR_ARCHIVE );
 #endif
 	sv_banFile = Cvar_Get("sv_banFile", "serverbans.dat", CVAR_ARCHIVE);
+	sv_noReferencedPaks = Cvar_Get ("sv_noReferencedPaks", "1", CVAR_ARCHIVE);
 
 	// initialize bot cvars so they are listed and can be set before loading the botlib
 	SV_BotInitCvars();
