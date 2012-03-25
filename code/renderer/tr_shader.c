@@ -2887,7 +2887,7 @@ static void LoadShaderFromBuffer( char *buff )
 		if( nameLength >= MAX_SHADERNAME_LENGTH ) {
 			strncpy( shadername, name, MAX_SHADERNAME_LENGTH );
 			shadername[MAX_SHADERNAME_LENGTH] = '\0';
-			Com_Printf( "Warning: Shader name too long '%s'...\n", shadername );
+			Com_DPrintf( "Warning: Shader name too long '%s'...\n", shadername );
 			continue;
 		}
 
