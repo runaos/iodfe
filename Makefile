@@ -280,9 +280,9 @@ endif
 
 USE_GIT=
 ifeq ($(wildcard .git),.git)
-  GIT_COMMIT=$(shell LANG=C git log -n1 --pretty=format:%h)
+  GIT_COMMIT=$(shell LANG=C git describe --tags --long --dirty=* --always)
   ifneq ($(GIT_COMMIT),)
-    VERSION:=$(VERSION)_git_$(GIT_COMMIT)
+    VERSION:=$(GIT_COMMIT)
     USE_GIT=1
   endif
 endif
