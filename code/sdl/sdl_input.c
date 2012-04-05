@@ -57,6 +57,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 
 static cvar_t *in_keyboardDebug     = NULL;
+static cvar_t *in_keyboardRepeatAlways     = NULL;
 static cvar_t *in_keyboardRepeatDelay     = NULL;
 static cvar_t *in_keyboardRepeatInterval     = NULL;
 
@@ -989,7 +990,7 @@ static void IN_ProcessEvents( void )
 	if( !SDL_WasInit( SDL_INIT_VIDEO ) )
 			return;
 
-	if( Key_GetCatcher( ) == 0 && keyRepeatEnabled )
+	if( !in_keyboardRepeatAlways->integer && Key_GetCatcher( ) == 0 && keyRepeatEnabled )
 	{
 		SDL_EnableKeyRepeat( 0, 0 );
 		keyRepeatEnabled = qfalse;
@@ -1157,6 +1158,7 @@ void IN_Init( void )
 	Com_DPrintf( "\n------- Input Initialization -------\n" );
 
 	in_keyboardDebug = Cvar_Get( "in_keyboardDebug", "0", CVAR_ARCHIVE );
+	in_keyboardRepeatAlways = Cvar_Get( "in_keyboardRepeatAlways", "0", CVAR_ARCHIVE );
 	in_keyboardRepeatDelay = Cvar_Get( "in_keyboardRepeatDelay", "500", CVAR_ARCHIVE );
 	in_keyboardRepeatInterval = Cvar_Get( "in_keyboardRepeatInterval", "30", CVAR_ARCHIVE );
 
