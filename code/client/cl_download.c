@@ -339,7 +339,7 @@ void DL_Init( void ) {
 		Com_Printf("Failed to initialize libcurl.\n");
 	}
 	dl_verbose = Cvar_Get("dl_verbose", "0", 0);
-	dl_source = Cvar_Get("dl_source", "http://q3a.ath.cx/getpk3bymapname.php/%m", CVAR_ARCHIVE);
+	dl_source = Cvar_Get("dl_source", "http://ws.q3df.org/getpk3bymapname.php/%m", CVAR_ARCHIVE);
 	dl_showprogress = Cvar_Get("dl_showprogress", "1", CVAR_ARCHIVE);
 	dl_showmotd = Cvar_Get("dl_showmotd", "1", CVAR_ARCHIVE);
 	dl_usebaseq3 = Cvar_Get("dl_usebaseq3", "0", CVAR_ARCHIVE);
