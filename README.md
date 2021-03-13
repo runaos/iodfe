@@ -1,3 +1,11 @@
+🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻
+
+This is old and bad, use this instead:
+
+https://github.com/JBustos22/oDFe + https://github.com/Jelvan1/cgame_proxymod
+
+🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺
+
 iodfengine is a defrag-oriented engine, a fork of ioquake3 with some dfengine features and some new things.
 
 source: https://github.com/runaos/iodfe
